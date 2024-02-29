@@ -8,17 +8,20 @@ public class PlayerLife : MonoBehaviour
 {
     private static int lives = 3;
     [SerializeField] private Text livesText;
+    [SerializeField] private GameObject gameOverPanel;
     private Animator anim;
     private Rigidbody2D rb;
     [SerializeField] private AudioSource deathSoundEffect;
 
     private void Awake()
     {
-        if(livesText != null)
+        if (livesText != null)
         {
             livesText.text = "x" + lives;
         }
+        gameOverPanel.SetActive(false);
     }
+
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -27,11 +30,12 @@ public class PlayerLife : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag ("Trap"))
+        if (collision.gameObject.CompareTag("Trap"))
         {
             Die();
         }
     }
+
     public void Die()
     {
         deathSoundEffect.Play();
@@ -40,7 +44,7 @@ public class PlayerLife : MonoBehaviour
         lives--;
         livesText.text = "x" + lives;
 
-        if (lives < 0)
+        if (lives <= 0)
         {
             GameOver();
         }
@@ -48,13 +52,24 @@ public class PlayerLife : MonoBehaviour
 
     private void GameOver()
     {
-        Debug.Log("Game Over");
+        gameOverPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        Debug.Log("RestartGame called");
         lives = 3;
         livesText.text = "x" + lives;
+        gameOverPanel.SetActive(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void RestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (lives > 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 }
+
