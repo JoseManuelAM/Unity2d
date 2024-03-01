@@ -57,7 +57,6 @@ public class PlayerLife : MonoBehaviour
 
     public void RestartGame()
     {
-        Debug.Log("RestartGame called");
         lives = 3;
         livesText.text = "x" + lives;
         gameOverPanel.SetActive(false);
